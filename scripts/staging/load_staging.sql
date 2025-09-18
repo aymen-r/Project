@@ -41,7 +41,7 @@ CREATE TABLE staging.Customer(
 
 CREATE TABLE staging.Product(
   ProductID        INT            NOT NULL PRIMARY KEY,
-  CategoryID       INT            NULL REFERENCES staging.Category(CategoryID),
+  CategoryID       INT            NULL ,
   ProductName      NVARCHAR(255)  NOT NULL,
   IsActive         BIT            NOT NULL,
   ProductCreatedAt DATETIME2(0)   NULL,
@@ -51,9 +51,9 @@ CREATE TABLE staging.Product(
 
 CREATE TABLE staging.ProductVariant(
   VariantID        INT            NOT NULL PRIMARY KEY,
-  ProductID        INT            NOT NULL REFERENCES staging.Product(ProductID),
+  ProductID        INT            NOT NULL,
   SKU              NVARCHAR(120)  NOT NULL UNIQUE,
-  VariantOptions   NVARCHAR(255)  NULL,      -- from option_summary
+  VariantOptions   NVARCHAR(255)  NULL, 
   UnitCost         DECIMAL(18,2)  NULL,
   IsActive         BIT            NOT NULL,
   VariantCreatedAt DATETIME2(0)   NULL,
@@ -65,8 +65,8 @@ CREATE TABLE staging.ProductVariant(
 CREATE TABLE staging.[Order](
   OrderID          INT            NOT NULL PRIMARY KEY,
   OrderNumber      NVARCHAR(50)   NOT NULL,
-  CustomerID       INT            NOT NULL REFERENCES staging.Customer(CustomerID),
-  ChannelID        INT            NULL REFERENCES staging.Channel(ChannelID),
+  CustomerID       INT            NOT NULL ,
+  ChannelID        INT            NULL ,
   OrderDateTime    DATETIME2(0)   NOT NULL,
   OrderStatus      NVARCHAR(50)   NULL,
   CurrencyCode     NVARCHAR(10)   NULL,
@@ -80,9 +80,9 @@ CREATE TABLE staging.[Order](
 
 CREATE TABLE staging.OrderLine(
   OrderLineID        INT            NOT NULL PRIMARY KEY,
-  OrderID            INT            NOT NULL REFERENCES staging.[Order](OrderID),
-  VariantID          INT            NOT NULL REFERENCES staging.ProductVariant(VariantID),
-  LineTitle          NVARCHAR(255)  NULL,   -- from title_snapshot
+  OrderID            INT            NOT NULL ,
+  VariantID          INT            NOT NULL ,
+  LineTitle          NVARCHAR(255)  NULL,   
   Quantity           INT            NOT NULL,
   UnitPrice          DECIMAL(18,2)  NULL,
   LineDiscountAmount DECIMAL(18,2)  NULL,
@@ -95,7 +95,7 @@ CREATE TABLE staging.OrderLine(
 
 CREATE TABLE staging.Payment(
   PaymentID        INT            NOT NULL PRIMARY KEY,
-  OrderID          INT            NOT NULL REFERENCES staging.[Order](OrderID),
+  OrderID          INT            NOT NULL ,
   PaymentMethod    NVARCHAR(50)   NULL,
   PaymentAmount    DECIMAL(18,2)  NOT NULL,
   PaidAtDateTime   DATETIME2(0)   NULL,
